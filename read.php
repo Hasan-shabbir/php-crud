@@ -1,5 +1,10 @@
 <?php
-include('connection.php');
+    session_start();
+    include('connection.php');
+    if(!isset($_SESSION['admin'])){
+        header("location: login.php");
+        die();
+    }
 
 $read = "SELECT * FROM `users`";
 $result = mysqli_query($conn, $read); // Use $conn instead of $this->conn
@@ -36,13 +41,18 @@ $sno = 0; // Initialize sno outside the loop
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active text-white" aria-current="page" href="index.php">Home</a>
+                        <a class="nav-link active text-white" aria-current="page" href="add.php">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="#">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" href="read.php">Users</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="logout.php">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -55,7 +65,7 @@ $sno = 0; // Initialize sno outside the loop
                 
             </div>
             <div class="col-6 btn">
-            <button class="btn btn-dark"><a href="index.php" class="text-white a"><i class="bi bi-person-plus-fill"></i> Add user</a></button>
+            <button class="btn btn-dark"><a href="add.php" class="text-white a"><i class="bi bi-person-plus-fill"></i> Add user</a></button>
             </div>
         </div>
     
