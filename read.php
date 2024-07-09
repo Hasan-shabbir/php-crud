@@ -6,7 +6,7 @@
         die();
     }
 
-$read = "SELECT * FROM `users`";
+$read = "SELECT * FROM `abc`";
 $result = mysqli_query($conn, $read); // Use $conn instead of $this->conn
 
 $sno = 0; // Initialize sno outside the loop

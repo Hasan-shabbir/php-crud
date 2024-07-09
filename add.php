@@ -9,7 +9,34 @@ if (!isset($_SESSION['admin'])) {
 
 $showError = "";
 
-if (isset($_POST['submit'])) {
+// Function to create 'abc' table if it doesn't exist
+function createTableIfNotExists($conn) {
+    $createTableQuery = "CREATE TABLE IF NOT EXISTS `abc` (
+                            `id` int(11) NOT NULL AUTO_INCREMENT,
+                            `name` varchar(255) NOT NULL,
+                            `email` varchar(255) NOT NULL,
+                            `password` varchar(255) NOT NULL,
+                            `address` text,
+                            `phone` varchar(20) NOT NULL,
+                            `image` varchar(255) NOT NULL,
+                            PRIMARY KEY (`id`),
+                            UNIQUE KEY `phone` (`phone`),
+                            UNIQUE KEY `image` (`image`)
+                         ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+
+    if (mysqli_query($conn, $createTableQuery)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Check if 'abc' table exists, create it if necessary
+if (!createTableIfNotExists($conn)) {
+    $showError = "Error creating table 'abc': " . mysqli_error($conn);
+}
+
+if (isset($_POST['submit']) && empty($showError)) {
     // Retrieve user data
     $name = $_POST['name'];
     $email = $_POST['email'];
@@ -44,14 +71,14 @@ if (isset($_POST['submit'])) {
         $showError = "Invalid email format.";
     }
 
-    // Check if phone number already exists
-    $phoneExists = mysqli_query($conn, "SELECT * FROM users WHERE phone = '$phone'");
+    // Check if phone number already exists in 'abc' table
+    $phoneExists = mysqli_query($conn, "SELECT * FROM abc WHERE phone = '$phone'");
     if (mysqli_num_rows($phoneExists) > 0) {
         $showError = "Phone number already exists. Please use a different one.";
     }
 
-    // Check if image already exists
-    $imageExists = mysqli_query($conn, "SELECT * FROM users WHERE image = '$image'");
+    // Check if image already exists in 'abc' table
+    $imageExists = mysqli_query($conn, "SELECT * FROM abc WHERE image = '$image'");
     if (mysqli_num_rows($imageExists) > 0) {
         $showError = "Image file name already exists. Please rename your image file.";
     }
@@ -60,8 +87,8 @@ if (isset($_POST['submit'])) {
     if (empty($showError)) {
         // Move uploaded image to destination folder
         if (move_uploaded_file($file_tmp, $file_destination)) {
-            // Insert user data into database
-            $sql = "INSERT INTO `users` (`name`, `email`, `password`, `address`, `phone`, `image`) 
+            // Insert user data into 'abc' table
+            $sql = "INSERT INTO `abc` (`name`, `email`, `password`, `address`, `phone`, `image`) 
                     VALUES ('$name', '$email', '$password', '$address', '$phone', '$image')";
             
             $insertResult = mysqli_query($conn, $sql);
@@ -79,6 +106,8 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
+
+
 
 
 
