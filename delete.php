@@ -4,7 +4,7 @@ include('connection.php');
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
-    $deleteQuery = "DELETE FROM `users` WHERE `id` = $id";
+    $deleteQuery = "DELETE FROM `abc` WHERE `id` = $id";
     $deleteResult = mysqli_query($conn, $deleteQuery);
 
     if ($deleteResult) {

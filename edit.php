@@ -11,7 +11,7 @@ $showError = "";
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-    $sql = "SELECT * FROM users WHERE id = $id";
+    $sql = "SELECT * FROM abc WHERE id = $id";
     $result = mysqli_query($conn, $sql);
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
@@ -48,7 +48,7 @@ if (isset($_POST['update'])) {
         }
 
         // Check if image file already exists for other users
-        $imageExists = mysqli_query($conn, "SELECT * FROM users WHERE image = '$image' AND id != '$user_id'");
+        $imageExists = mysqli_query($conn, "SELECT * FROM abc WHERE image = '$image' AND id != '$user_id'");
         if (mysqli_num_rows($imageExists) > 0) {
             $showError = "Image file name already exists for another user. Please rename your image file.";
         }
@@ -70,14 +70,14 @@ if (isset($_POST['update'])) {
     }
 
     // Check if phone number already exists for other users
-    $phoneExists = mysqli_query($conn, "SELECT * FROM users WHERE phone = '$phone' AND id != '$user_id'");
+    $phoneExists = mysqli_query($conn, "SELECT * FROM abc WHERE phone = '$phone' AND id != '$user_id'");
     if (mysqli_num_rows($phoneExists) > 0) {
         $showError = "Phone number already exists for another user. Please use a different one.";
     }
 
     // If no errors, proceed with database update
     if (empty($showError)) {
-        $updateQuery = "UPDATE `users` SET `name`='$name', `email`='$email', `password`='$password', `address`='$address', `phone`='$phone'";
+        $updateQuery = "UPDATE `abc` SET `name`='$name', `email`='$email', `password`='$password', `address`='$address', `phone`='$phone'";
         
         if (isset($image)) {
             $updateQuery .= ", `image`='$image'";
@@ -189,7 +189,7 @@ if (isset($_POST['update'])) {
                     <input type="file" class="form-control" id="inputPassword3" name="image" value="<?php echo $image ?>">
                     </div>
                 </div>
-                <!--<input type="hidden" name="user_id" value="<?php echo $_GET['id']; ?>">-->
+                <input type="hidden" name="user_id" value="<?php echo $_GET['id']; ?>">
                 <button type="submit" class="btn btn-dark" name="update"><i class="bi bi-pencil-square"></i> Update user</button>
                 </form>
                 
